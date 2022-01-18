@@ -18,10 +18,11 @@ public class InvoiceServiceTest {
     @Autowired
     InvoiceService invoiceService;
 
+
     //Ger all purchased products and their amount
     @Test
     public void test(){
-        TreeMap<Product, Integer> invoice = invoiceService.getDummyTrans();
+        TreeMap<Product, Integer> invoice = invoiceService.getTestTransactions();
 
         //expected 2 light bulbs and 3 waters (MAYBE or MAYBE! ) on order 2
         for(Map.Entry<Product, Integer> entry: invoice.entrySet()){
@@ -41,11 +42,10 @@ public class InvoiceServiceTest {
     }
 
     @Test
-    public void testsss(){
-
-        System.out.println("CONVERTED VAT>>>>>>>>>> "+invoiceService.convertVAT("18"));
-
-
+    public void test23(){
+        System.out.println("\n Dummy trans "+invoiceService.getTestTransactions().size()+"\n");
     }
+
+
 
 }

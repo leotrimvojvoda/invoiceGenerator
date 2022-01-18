@@ -38,8 +38,8 @@ public class Product implements Comparable{
     public int compareTo(Object o) {
         if(o instanceof Product){
             Product product = (Product)o;
-            //if(product.getId() == id) return 0;
-            if(product.getProductPrice() == productPrice) return 0;
+            if(product.getId() == id) return 0;
+            //if(product.getProductPrice() == productPrice) return 0;
         }
         return 1;
     }

@@ -18,6 +18,10 @@ target/
 *.iws
 *.iml
 *.ipr
+mvnw
+mvnw.cmd
+InvoiceCalculator.iml
+/target/**
 
 ### NetBeans ###
 /nbproject/private/
