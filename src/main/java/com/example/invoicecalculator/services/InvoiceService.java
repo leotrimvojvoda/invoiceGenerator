@@ -47,7 +47,7 @@ public class InvoiceService {
         this.total = 0;
     }
 
-    public TreeMap<Product, Integer> getTestTransactions(){
+    public TreeMap<Product, Integer> getDummyTransactions(){
 
         Product p1 = new Product(1,"Milk",250,0,0.18);
         Product p2 = new Product(2,"Water",250,0,0.18);
@@ -63,17 +63,17 @@ public class InvoiceService {
         Product p12 = new Product(12, "D",10,0,0.1);
         Product p13 = new Product(13, "E",10,0,0.1);
         Product p14 = new Product(14,"F",1,0.25,0.18);
-        Product p15 = new Product(15, "G",0.99,0,0.18);
-        Product p16 = new Product(16, "H61",1,0,0.18);
-        Product p17 = new Product(17, "I62",1,0,0.18);
-        Product p18 = new Product(18, "J63",1,0,0.18);
+        Product p15 = new Product(15, "G",1,0,0.18);
+        Product p16 = new Product(16, "H61",2,0,0.18);
+        Product p17 = new Product(17, "I62",2,0,0.18);
+        Product p18 = new Product(18, "J63",2,0,0.18);
         Product p19 = new Product(19, "K",1,0,0.18);
 
         TreeMap<Product, Integer> list = new TreeMap<>();
 
-        list.put(p1,1);
+        /*list.put(p1,1);
         list.put(p2,1);
-       /* list.put(p3,1);
+        list.put(p3,1);
         list.put(p4,1);
         list.put(p5,1);
         list.put(p6,1);
@@ -89,21 +89,20 @@ public class InvoiceService {
         list.put(p16,61);
         list.put(p17,62);
         list.put(p18,150);
-        list.put(p19,10);
+       list.put(p19,1);
 
         return list;
     }
 
     public List<Invoice> getInvoices(int orderId){
 
-        transactions =  getTestTransactions();//getTransactions(orderId);
+        transactions =  getDummyTransactions();//getTransactions(orderId);
 
         Product product = new Product();
         int amount = 0;
         double discount = 0;
         double price = 0;
         double vat = 0;
-
 
         for(Map.Entry<Product, Integer> entry: transactions.entrySet()) {
 
@@ -120,78 +119,67 @@ public class InvoiceService {
             }
             else if(amount > 50){
 
-                System.out.println("FIFTY: "+product + "AMT "+amount);
-
-                int lefOver = addToFifties(product,amount);
+                int leftOver = addToFifties(product,amount);
 
                 //In case there is leftover from the amount add it to the invoice
                 //Example: Amount = 63 -> 13 will be the leftover
-                if ((total+((price*lefOver) + (price*lefOver) * vat)) < 500) {
-                    //addProductToInvoice(product, lefOver, price, vat);
-                }else {
-                    invoices.add(getCompleteInvoice());
-                    clear();
-                    //addProductToInvoice(product,lefOver,price,vat);
-                }
-
-            }
-
-            else if ((total+((price*amount) + (price*amount) * vat)) < 500) {
+              if(leftOver > 0 ){
+                  if ((total+((price*leftOver) + (price*leftOver) * vat)) < 500) {
+                      //addProductToInvoice(product, leftOver, price, vat);
+                  }else {
+                      invoices.add(getCompleteInvoice());
+                      clear();
+                      //addProductToInvoice(product,leftOver,price,vat);
+                  }
+              }
+            }else if ((total+((price*amount) + (price*amount) * vat)) < 500) {
 
                 addProductToInvoice(product, amount, price, vat);
 
                 if(!fifties.isEmpty()){
 
-                for(Map.Entry<Product, Integer> tf : fifties.entrySet()){
-
-                    if((total + (tf.getKey().getProductPrice() * 50)
-                            + ((tf.getKey().getProductPrice() * 50) * tf.getKey().getVat()))
-                            < 500)
-
-                    {
-                        System.out.println(">>>> ADDED 50  < 500! "+tf.getKey().getProductName());
-                        addProductToInvoice(tf.getKey(),50,tf.getKey().getDiscount(),tf.getKey().getVat());
-
-                        if(tf.getValue() < 1)
-                            fifties.remove(tf.getKey());
-                        else
-                            fifties.put(entry.getKey(), entry.getValue()-1);
-
+                    System.out.println("FIFTIES" );
+                    for (Map.Entry<Product, Integer> tff : fifties.entrySet()){
+                        System.out.println(tff.getKey().getProductName()+" - "+tff.getValue());
                     }
 
-                    else
+                    for(Map.Entry<Product, Integer> tf : fifties.entrySet()){
 
-                    {
-                        invoices.add(getCompleteInvoice());
-                        clear();
-                        System.out.println(">>>> NEW ADDED 50 "+tf.getKey().getProductName());
-                        addProductToInvoice(tf.getKey(),50,tf.getKey().getDiscount(),tf.getKey().getVat());
-                        if(tf.getValue() < 1)
-                            fifties.remove(tf.getKey());
-                        else
-                            fifties.put(entry.getKey(), entry.getValue()-1);
+                        addFiftyToInvoice(tf.getKey(), tf.getValue());
+
                     }
-
                 }
-
-                }
-
             }else {
                 invoices.add(getCompleteInvoice());
                 clear();
                 addProductToInvoice(product,amount,price,vat);
-
             }
         }
 
-
-
-
         //If there are some products left then they will be added in a new invoice
-        if(total > 0 && amount < 50){
-            //clear();
-            addProductToInvoice(product,amount,price,vat);
-            invoices.add(getCompleteInvoice());
+        if(total > 0 || !fifties.isEmpty()){
+            if(total > 0){
+                //clear();
+                //In case there is anything left in total that surpasses 500 it will be added to the invoice and surpass 500
+                //Removing the below line will dismiss the last products that did not make it to the threshold
+                addProductToInvoice(product,amount,price,vat);
+                invoices.add(getCompleteInvoice());
+            }else{
+                while (!fifties.isEmpty()){
+                        for(Map.Entry<Product, Integer> tf : fifties.entrySet()){
+                            addFiftyToInvoice(tf.getKey(), tf.getValue());
+                        }
+                }
+            }
+        }
+
+        System.out.println("FIFTIES IN THE END" );
+        if(fifties.isEmpty()){
+            System.out.println("- NO PRODUCTS LEFT IN FIFITES - ");
+        }else{
+            for (Map.Entry<Product, Integer> tff : fifties.entrySet()){
+                System.out.println(tff.getKey().getProductName()+" - "+tff.getValue());
+            }
         }
 
         return invoices;
@@ -253,6 +241,32 @@ public class InvoiceService {
         return tempInvoice;
     }
 
+    public void addFiftyToInvoice(Product product, int fiftyAmount){
+
+        double thisFiftyTotal = (product.getProductPrice() * 50)
+                + ((product.getProductPrice() * 50) * product.getVat());
+
+        if((total + thisFiftyTotal ) < 500) {
+            System.out.println(">>>> ADDED 50  < 500! " + product.getProductName());
+
+            addProductToInvoice(product, 50, (product.getProductPrice() - product.getDiscount()), product.getVat());
+            fifties.remove(product);
+            fifties.put(product, fiftyAmount - 1);
+            if (fiftyAmount < 1)
+                fifties.remove(product);
+
+        } else {
+            invoices.add(getCompleteInvoice());
+            clear();
+            addProductToInvoice(product, 50, (product.getProductPrice() - product.getDiscount()), product.getVat());
+            fifties.remove(product);
+            fifties.put(product, fiftyAmount - 1);
+            if (fiftyAmount < 1)
+                fifties.remove(product);
+        }
+
+    }
+
     public int addToFifties(Product product, int amount){
         int tempAmount = amount;
         int leftOver = tempAmount % 50;
@@ -268,7 +282,6 @@ public class InvoiceService {
         tempItems = new TreeMap<>();
         tempInvoice = new Invoice();
     }
-
 
     /*Convert vat 18 => 0.18*/
     public Double convertVAT(String vat){

@@ -22,7 +22,7 @@ public class InvoiceServiceTest {
     //Ger all purchased products and their amount
     @Test
     public void test(){
-        TreeMap<Product, Integer> invoice = invoiceService.getTestTransactions();
+        TreeMap<Product, Integer> invoice = invoiceService.getDummyTransactions();
 
         //expected 2 light bulbs and 3 waters (MAYBE or MAYBE! ) on order 2
         for(Map.Entry<Product, Integer> entry: invoice.entrySet()){
@@ -35,7 +35,6 @@ public class InvoiceServiceTest {
         System.out.println("\n");
         List<Invoice> invoices = invoiceService.getInvoices(1);
         if(invoices.size() >= 1){
-            System.out.println(invoices.size());
             invoices.forEach(System.out::println);
         }
         System.out.println("\n");
@@ -43,7 +42,7 @@ public class InvoiceServiceTest {
 
     @Test
     public void test23(){
-        System.out.println("\n Dummy trans "+invoiceService.getTestTransactions().size()+"\n");
+        System.out.println("\n Dummy trans "+invoiceService.getDummyTransactions().size()+"\n");
     }
 
 
