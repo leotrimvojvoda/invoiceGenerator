@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -24,11 +25,11 @@ public class Product implements Comparable{
     @Size(min = 1, max = 50, message = "PRODUCT NAME TO LONG: Product name must be between 1 and 50 characters")
     private String productName;
     @Column(name = "productPrice")
-    @NotEmpty
+
     private double productPrice;
     @Column(name = "discount")
     private double discount;
-    @Size(max = 3, min = 1, message = "VAT cannot be over 3 digits and not less than 1 digit")
+
     @Column(name = "vat")
     private double vat;
 

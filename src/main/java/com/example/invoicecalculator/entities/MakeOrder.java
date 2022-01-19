@@ -20,10 +20,4 @@ public class MakeOrder {
     double vat;
     @Column(name="total")
     double total;
-
-
-
-    public MakeOrder(int id) {
-        this.id = id;
-    }
 }

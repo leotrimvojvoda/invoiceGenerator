@@ -6,11 +6,9 @@ import com.example.invoicecalculator.entities.Invoice;
 import com.example.invoicecalculator.entities.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListMap;
 
 @Service
 public class InvoiceService {
@@ -51,8 +49,8 @@ public class InvoiceService {
 
     public TreeMap<Product, Integer> getDummyTransactions(){
 
-        Product p1 = new Product(1,"Milk",250,0,0.18);
-        Product p2 = new Product(2,"Water",250,0,0.18);
+        Product p1 = new Product(1,"Milk",125,0,0.18);
+        Product p2 = new Product(2,"Water",125,0,0.18);
         Product p3 = new Product(3,"Snickers",250,0,0.18);
         Product p4 = new Product(4,"Coke",250,0,0.18);
         Product p5 = new Product(5,"Tea",250,0,0.18);
@@ -75,7 +73,7 @@ public class InvoiceService {
 
         TreeMap<Product, Integer> list = new TreeMap<>();
 
-        /*list.put(p1,1);
+        list.put(p1,1);
         list.put(p2,1);
         list.put(p3,1);
         list.put(p4,1);
@@ -83,12 +81,12 @@ public class InvoiceService {
         list.put(p6,1);
         list.put(p7,1);
         list.put(p8,1);
-        list.put(p9,70);
-        list.put(p10,10);*/
+        list.put(p9,50);
+        list.put(p10,10);
         list.put(p11,1);
         list.put(p16,61);
-        list.put(p17,300);
-        list.put(p18,200);
+        list.put(p17,200);
+        list.put(p18,150);
         list.put(p19,100);
         list.put(p12,10);
         list.put(p13,10);
@@ -100,7 +98,7 @@ public class InvoiceService {
 
     public List<Invoice> getInvoices(int orderId){
 
-        transactions =  getDummyTransactions();//getTransactions(orderId);
+        transactions = getDummyTransactions();//getTransactions(orderId); //
 
         Product product = new Product();
         int amount = 0;
@@ -128,14 +126,12 @@ public class InvoiceService {
 
                 //In case there is leftover from the amount add it to the invoice
                 //Example: Amount = 63 -> 13 will be the leftover
-              if(leftOver > 0 ){
-                  if ((total+((price*leftOver) + (price*leftOver) * vat)) < 500) {
-                      //addProductToInvoice(product, leftOver, price, vat);
-                  }else {
+              if(leftOver > 0){
+                  if ((total+((price*leftOver) + (price*leftOver) * vat)) > 500) {
                       invoices.add(getCompleteInvoice());
                       clear();
-                      //addProductToInvoice(product,leftOver,price,vat);
                   }
+                  addProductToInvoice(product,leftOver,price,vat);
               }
             }
             else if ((total+((price*amount) + (price*amount) * vat)) < 500) {
@@ -160,6 +156,8 @@ public class InvoiceService {
                 while (!fifties.isEmpty()) addFiftyToInvoice();
             }
         }
+
+        if(!fifties.isEmpty()) System.out.println("THERE ARE STILL SOME ITEMS IN THE FIFTIES LIST");
 
         return invoices;
     }

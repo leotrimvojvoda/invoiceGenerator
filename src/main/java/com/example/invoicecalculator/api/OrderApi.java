@@ -26,7 +26,7 @@ public class OrderApi {
     }
 
     @GetMapping("/get/{id}")
-    public MakeOrder getOrder(int id)throws Exception{
+    public MakeOrder getOrder(@PathVariable int id)throws Exception{
 
         Optional<MakeOrder> order = orderRepository.findById(id);
 

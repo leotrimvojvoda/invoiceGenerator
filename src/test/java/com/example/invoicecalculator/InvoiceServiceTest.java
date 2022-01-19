@@ -18,7 +18,6 @@ public class InvoiceServiceTest {
     @Autowired
     InvoiceService invoiceService;
 
-
     //Ger all purchased products and their amount
     @Test
     public void test(){

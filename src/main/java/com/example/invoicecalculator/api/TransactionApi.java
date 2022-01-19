@@ -1,5 +1,6 @@
 package com.example.invoicecalculator.api;
 
+import com.example.invoicecalculator.data.OrderRepository;
 import com.example.invoicecalculator.data.ProductRepository;
 import com.example.invoicecalculator.data.TransactionRepository;
 import com.example.invoicecalculator.entities.Invoice;
@@ -20,14 +21,13 @@ public class TransactionApi {
     InvoiceService invoiceService;
     TransactionRepository transactionRepository;
     ProductRepository productRepository;
-    OrderApi orderApi;
+    OrderRepository orderRepository;
 
-    @Autowired
-    public TransactionApi(InvoiceService invoiceService, TransactionRepository transactionRepository, ProductRepository productRepository, OrderApi orderApi) {
+    public TransactionApi(InvoiceService invoiceService, TransactionRepository transactionRepository, ProductRepository productRepository, OrderRepository orderRepository) {
         this.invoiceService = invoiceService;
         this.transactionRepository = transactionRepository;
         this.productRepository = productRepository;
-        this.orderApi = orderApi;
+        this.orderRepository = orderRepository;
     }
 
     @GetMapping("/getInvoice/{orderId}")
@@ -38,23 +38,23 @@ public class TransactionApi {
     @PostMapping("/buy")
     public Transaction makeTransaction(@Valid @RequestBody Transaction transaction)throws Exception{
 
-        transactionRepository.save(transaction);
-
         Product product = productRepository.findById(transaction.getProductId()).orElseThrow(() -> new Exception("Product does not exist in the database"));
 
-        double subTotal = product.getProductPrice()-product.getDiscount();
-        double vat = subTotal*product.getVat();
-        double total = subTotal+vat;
+       if(transaction.getOrderId() != 0){
+           double subTotal = product.getProductPrice()-product.getDiscount();
+           double vat = subTotal*product.getVat();
+           double total = subTotal+vat;
 
-        MakeOrder order = new MakeOrder();
-        order.setId(transaction.getOrderId());
-        order.setSubTotal(subTotal);
-        order.setVat(vat);
-        order.setTotal(total);
+           MakeOrder order = new MakeOrder();
+           order.setId(1);
+           order.setSubTotal(22.2);
+           order.setVat(22.1);
+           order.setTotal(22.3);
 
-        orderApi.addOrder(order);
+           orderRepository.save(order);
+       }
 
-        return transaction;
+        return transactionRepository.save(transaction);
     }
 
 }

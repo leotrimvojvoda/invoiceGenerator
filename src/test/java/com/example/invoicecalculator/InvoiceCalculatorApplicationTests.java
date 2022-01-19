@@ -1,5 +1,6 @@
 package com.example.invoicecalculator;
 
+import com.example.invoicecalculator.api.TransactionApi;
 import com.example.invoicecalculator.data.TransactionRepository;
 import com.example.invoicecalculator.entities.MakeOrder;
 import com.example.invoicecalculator.entities.Product;
@@ -13,6 +14,8 @@ class InvoiceCalculatorApplicationTests {
 
 	@Autowired
 	TransactionRepository transactionRepository;
+	@Autowired
+	TransactionApi transactionApi;
 
 	@Test
 	void contextLoads() {
@@ -48,6 +51,17 @@ class InvoiceCalculatorApplicationTests {
 	@Test
 	public void getNumOfPurchaedProducts(){
 		System.out.println(transactionRepository.getNumberOfPurchasedProductsInOneOrder(1,1));
+	}
+
+
+	@Test
+	public void makeTransaction()throws Exception{
+		Transaction transaction = new Transaction();
+		transaction.setOrderId(1);
+		transaction.setProductId(7);
+
+		transactionApi.makeTransaction(transaction);
+
 	}
 
 }
