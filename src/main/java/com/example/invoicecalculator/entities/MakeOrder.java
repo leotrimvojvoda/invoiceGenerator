@@ -15,9 +15,13 @@ public class MakeOrder {
     @Column(name = "id", nullable = false)
     private int id;
     @Column(name="subTotal")
-    String subTotal;
+    double subTotal;
+    @Column(name="vat")
+    double vat;
     @Column(name="total")
-    String total;
+    double total;
+
+
 
     public MakeOrder(int id) {
         this.id = id;

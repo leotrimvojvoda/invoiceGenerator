@@ -45,6 +45,4 @@ public class InvoiceServiceTest {
         System.out.println("\n Dummy trans "+invoiceService.getDummyTransactions().size()+"\n");
     }
 
-
-
 }

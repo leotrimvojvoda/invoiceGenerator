@@ -5,12 +5,14 @@ import com.example.invoicecalculator.data.TransactionRepository;
 import com.example.invoicecalculator.entities.Invoice;
 import com.example.invoicecalculator.entities.Product;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
-@Component
+@Service
 public class InvoiceService {
 
     private TreeMap<Product, Integer> transactions;
@@ -25,7 +27,7 @@ public class InvoiceService {
     private TreeMap<Product, Integer> tempItems;
 
     //Hold pack of products with over 50 purchases of one product
-    private NavigableMap<Product, Integer> fifties;
+    private ConcurrentMap<Product, Integer> fifties;
 
     private double subTotal;
     private double total;
@@ -41,7 +43,7 @@ public class InvoiceService {
         this.tempInvoice = new Invoice();
         this.invoices = new ArrayList<>();
         this.tempItems = new TreeMap<>();
-        this.fifties = new ConcurrentSkipListMap<>();
+        this.fifties = new ConcurrentHashMap<>();
         this.subTotal = 0;
         this.invoiceVat = 0;
         this.total = 0;
@@ -57,17 +59,19 @@ public class InvoiceService {
         Product p6 = new Product(6,"Light Bulb",250,0,0.18);
         Product p7 = new Product(7,"TV",600,0,0);
         Product p8 = new Product(8,"Boiler",750,0.25,0.18);
-        Product p9 = new Product(9, "A",10,0,0.1);
+        Product p9 = new Product(9, "A",5,0,0.1);
         Product p10 = new Product(10, "B",10,0,0.1);
-        Product p11 = new Product(11, "C",10,0,0.1);
+
+        Product p11 = new Product(11, "C",100,50,0.1);
         Product p12 = new Product(12, "D",10,0,0.1);
         Product p13 = new Product(13, "E",10,0,0.1);
         Product p14 = new Product(14,"F",1,0.25,0.18);
         Product p15 = new Product(15, "G",1,0,0.18);
+
         Product p16 = new Product(16, "H61",2,0,0.18);
-        Product p17 = new Product(17, "I62",2,0,0.18);
-        Product p18 = new Product(18, "J63",2,0,0.18);
-        Product p19 = new Product(19, "K",1,0,0.18);
+        Product p17 = new Product(17, "H200",2,0,0.18);
+        Product p18 = new Product(18, "H150",2,0,0.18);
+        Product p19 = new Product(19, "H100",1,0,0.18);
 
         TreeMap<Product, Integer> list = new TreeMap<>();
 
@@ -79,17 +83,17 @@ public class InvoiceService {
         list.put(p6,1);
         list.put(p7,1);
         list.put(p8,1);
-        list.put(p9,10);
-        list.put(p10,10);
-        list.put(p11,10);
-        list.put(p12,10);
-        list.put(p13,10);*/
-        list.put(p14,1);
-        list.put(p15,33);
+        list.put(p9,70);
+        list.put(p10,10);*/
+        list.put(p11,1);
         list.put(p16,61);
-        list.put(p17,62);
-        list.put(p18,150);
-       list.put(p19,1);
+        list.put(p17,300);
+        list.put(p18,200);
+        list.put(p19,100);
+        list.put(p12,10);
+        list.put(p13,10);
+        list.put(p14,5);
+        list.put(p15,33);
 
         return list;
     }
@@ -120,6 +124,7 @@ public class InvoiceService {
             else if(amount > 50){
 
                 int leftOver = addToFifties(product,amount);
+                System.out.println("Added 50: "+product.getProductName()+" with "+ amount/50 +" items ");
 
                 //In case there is leftover from the amount add it to the invoice
                 //Example: Amount = 63 -> 13 will be the leftover
@@ -132,23 +137,13 @@ public class InvoiceService {
                       //addProductToInvoice(product,leftOver,price,vat);
                   }
               }
-            }else if ((total+((price*amount) + (price*amount) * vat)) < 500) {
+            }
+            else if ((total+((price*amount) + (price*amount) * vat)) < 500) {
 
                 addProductToInvoice(product, amount, price, vat);
 
-                if(!fifties.isEmpty()){
+                if(!fifties.isEmpty()) addFiftyToInvoice();
 
-                    System.out.println("FIFTIES" );
-                    for (Map.Entry<Product, Integer> tff : fifties.entrySet()){
-                        System.out.println(tff.getKey().getProductName()+" - "+tff.getValue());
-                    }
-
-                    for(Map.Entry<Product, Integer> tf : fifties.entrySet()){
-
-                        addFiftyToInvoice(tf.getKey(), tf.getValue());
-
-                    }
-                }
             }else {
                 invoices.add(getCompleteInvoice());
                 clear();
@@ -158,33 +153,16 @@ public class InvoiceService {
 
         //If there are some products left then they will be added in a new invoice
         if(total > 0 || !fifties.isEmpty()){
-            if(total > 0){
-                //clear();
-                //In case there is anything left in total that surpasses 500 it will be added to the invoice and surpass 500
-                //Removing the below line will dismiss the last products that did not make it to the threshold
-                addProductToInvoice(product,amount,price,vat);
-                invoices.add(getCompleteInvoice());
-            }else{
-                while (!fifties.isEmpty()){
-                        for(Map.Entry<Product, Integer> tf : fifties.entrySet()){
-                            addFiftyToInvoice(tf.getKey(), tf.getValue());
-                        }
-                }
-            }
-        }
 
-        System.out.println("FIFTIES IN THE END" );
-        if(fifties.isEmpty()){
-            System.out.println("- NO PRODUCTS LEFT IN FIFITES - ");
-        }else{
-            for (Map.Entry<Product, Integer> tff : fifties.entrySet()){
-                System.out.println(tff.getKey().getProductName()+" - "+tff.getValue());
+            if(total > 0) invoices.add(getCompleteInvoice());
+
+            if(!fifties.isEmpty()){
+                while (!fifties.isEmpty()) addFiftyToInvoice();
             }
         }
 
         return invoices;
     }
-
     /*
      * This method will return a list of transactions
      * associated  with the number of items sold per order
@@ -219,7 +197,6 @@ public class InvoiceService {
         tempInvoice.setSubTotal(subTotal);
         tempInvoice.setTotal(total);
         tempInvoice.setItems(tempItems);
-
         return tempInvoice;
     }
 
@@ -241,30 +218,26 @@ public class InvoiceService {
         return tempInvoice;
     }
 
-    public void addFiftyToInvoice(Product product, int fiftyAmount){
+    public void addFiftyToInvoice(){
 
-        double thisFiftyTotal = (product.getProductPrice() * 50)
-                + ((product.getProductPrice() * 50) * product.getVat());
+        for(Map.Entry<Product, Integer> tf : fifties.entrySet()){
 
-        if((total + thisFiftyTotal ) < 500) {
-            System.out.println(">>>> ADDED 50  < 500! " + product.getProductName());
+            Product product = tf.getKey();
+            int fiftyAmount = tf.getValue();
+
+            double thisFiftyTotal = (product.getProductPrice() * 50)
+                    + ((product.getProductPrice() * 50) * product.getVat());
+
+            if((total + thisFiftyTotal ) >= 500 || fifties.size() == 1) {
+                invoices.add(getCompleteInvoice());
+                clear();
+            }
 
             addProductToInvoice(product, 50, (product.getProductPrice() - product.getDiscount()), product.getVat());
-            fifties.remove(product);
-            fifties.put(product, fiftyAmount - 1);
-            if (fiftyAmount < 1)
-                fifties.remove(product);
+            fifties.put(product, (fiftyAmount - 1));
+            if (fiftyAmount <= 1) fifties.remove(product);
 
-        } else {
-            invoices.add(getCompleteInvoice());
-            clear();
-            addProductToInvoice(product, 50, (product.getProductPrice() - product.getDiscount()), product.getVat());
-            fifties.remove(product);
-            fifties.put(product, fiftyAmount - 1);
-            if (fiftyAmount < 1)
-                fifties.remove(product);
         }
-
     }
 
     public int addToFifties(Product product, int amount){
