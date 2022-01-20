@@ -10,4 +10,4 @@
 * Created API endpoints to CRUD Products
 
 # TODO
-* Transactions from the database are returned only for the first order no matter what order id we specify.
+Some invoices are generated even though there could be inserted some more products in it

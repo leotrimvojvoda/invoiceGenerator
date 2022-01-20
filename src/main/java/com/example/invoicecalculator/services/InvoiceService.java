@@ -1,5 +1,6 @@
 package com.example.invoicecalculator.services;
 
+import com.example.invoicecalculator.data.OrderRepository;
 import com.example.invoicecalculator.data.ProductRepository;
 import com.example.invoicecalculator.data.TransactionRepository;
 import com.example.invoicecalculator.entities.Invoice;
@@ -19,7 +20,7 @@ public class InvoiceService {
     private Invoice tempInvoice;
 
     //Add invoices below 500$ to this list or single products above > 500$
-    private final List<Invoice> invoices;
+    private List<Invoice> invoices;
 
     //Hold items until one invoice is complete
     private TreeMap<Product, Integer> tempItems;
@@ -31,12 +32,12 @@ public class InvoiceService {
     private double total;
     private double invoiceVat;
 
-    @Autowired
-    private TransactionRepository transactionRepository;
-    @Autowired
-    private ProductRepository productRepository;
+    private final TransactionRepository transactionRepository;
+    private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
 
-    public InvoiceService() {
+    @Autowired
+    public InvoiceService(TransactionRepository transactionRepository, ProductRepository productRepository,OrderRepository orderRepository) {
         this.transactions = new TreeMap<>();
         this.tempInvoice = new Invoice();
         this.invoices = new ArrayList<>();
@@ -45,6 +46,9 @@ public class InvoiceService {
         this.subTotal = 0;
         this.invoiceVat = 0;
         this.total = 0;
+        this.transactionRepository = transactionRepository;
+        this.productRepository = productRepository;
+        this.orderRepository = orderRepository;
     }
 
     public TreeMap<Product, Integer> getDummyTransactions(){
@@ -54,9 +58,11 @@ public class InvoiceService {
         Product p3 = new Product(3,"Snickers",125,0,0.18);
         Product p4 = new Product(4,"Coke",125,0,0.18);
         Product p5 = new Product(5,"Tea",125,0,0.18);
+
         Product p6 = new Product(6,"Light Bulb",250,0,0.18);
         Product p7 = new Product(7,"TV",600,0,0);
         Product p8 = new Product(8,"Boiler",750,0.25,0.18);
+
         Product p9 = new Product(9, "A",5,0,0.1);
         Product p10 = new Product(10, "B",10,0,0.1);
 
@@ -97,6 +103,9 @@ public class InvoiceService {
     }
 
     public List<Invoice> getInvoices(int orderId){
+
+        invoices = new ArrayList<>();
+        clear();
 
         transactions = getTransactions(orderId); //getDummyTransactions();//
 
@@ -166,17 +175,23 @@ public class InvoiceService {
     public TreeMap<Product,Integer> getTransactions(int orderId){
 
         TreeMap<Product,Integer> map = new TreeMap<>();
-        int numProducts;
-        Product product;
 
-        List<Integer> purchasedProducts = transactionRepository.getProductListInOneOrder(orderId);
+        if(orderRepository.existsById(orderId)){
 
-        for(int i : purchasedProducts){
-            product = productRepository.getById(i);
-            numProducts = transactionRepository.getNumberOfPurchasedProductsInOneOrder(i,orderId);
-            map.put(product,numProducts);
+            int numProducts;
+            Product product;
+
+            List<Integer> purchasedProducts = transactionRepository.getProductListInOneOrder(orderId);
+
+            for(int i : purchasedProducts){
+                product = productRepository.getById(i);
+                numProducts = transactionRepository.getNumberOfPurchasedProductsInOneOrder(i,orderId);
+                map.put(product,numProducts);
+            }
         }
+
         return map;
+
     }
 
     /*Add product in the invoice list and add its value to the invoice*/
@@ -271,5 +286,4 @@ public class InvoiceService {
         }
         return Double.parseDouble(vat);
     }
-
 }

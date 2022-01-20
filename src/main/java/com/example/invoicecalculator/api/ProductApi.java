@@ -4,7 +4,6 @@ package com.example.invoicecalculator.api;
 import com.example.invoicecalculator.data.ProductRepository;
 import com.example.invoicecalculator.entities.Product;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.expression.ExpressionException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,6 +24,11 @@ public class ProductApi {
     @PostMapping("/add")
     public Product addProduct(@RequestBody @Valid Product product){
         return  productRepository.save(product);
+    }
+
+    @PostMapping("/addAll")
+    public List<Product> addAll(@RequestBody List<Product> products){
+        return productRepository.saveAll(products);
     }
 
     @GetMapping("/get/{id}")

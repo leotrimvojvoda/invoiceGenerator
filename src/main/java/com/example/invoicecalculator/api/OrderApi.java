@@ -23,6 +23,9 @@ public class OrderApi {
     /*MAYBE REQUESTBODY SHOULD BE REMOVED */
     @PostMapping("/add")
     public MakeOrder addOrder(@RequestBody @Valid MakeOrder order){
+        order.setTotal(0);
+        order.setVat(0);
+        order.setSubTotal(0);
         return  orderRepository.save(order);
     }
 

@@ -8,9 +8,9 @@ import com.example.invoicecalculator.entities.MakeOrder;
 import com.example.invoicecalculator.entities.Product;
 import com.example.invoicecalculator.entities.Transaction;
 import com.example.invoicecalculator.services.InvoiceService;
+import com.example.invoicecalculator.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.*;
@@ -23,49 +23,42 @@ public class TransactionApi {
     TransactionRepository transactionRepository;
     ProductRepository productRepository;
     OrderRepository orderRepository;
+    OrderService orderService;
 
     @Autowired
-    public TransactionApi(InvoiceService invoiceService, TransactionRepository transactionRepository, ProductRepository productRepository, OrderRepository orderRepository) {
+    public TransactionApi(InvoiceService invoiceService, TransactionRepository transactionRepository, ProductRepository productRepository, OrderRepository orderRepository, OrderService orderService) {
         this.invoiceService = invoiceService;
         this.transactionRepository = transactionRepository;
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
+        this.orderService = orderService;
     }
 
     @GetMapping("/getInvoice/{orderId}")
     public List<Invoice> generateInvoices(@PathVariable int orderId){
-       return invoiceService.getInvoices(orderId);
+        return invoiceService.getInvoices(orderId);
+    }
+
+    @GetMapping("/get/{transactionId}")
+    public Transaction getTransaction(@PathVariable int transactionId){
+        return transactionRepository.getById(transactionId);
+    }
+
+    @GetMapping("/getAll")
+    public List<Transaction> getAll(){
+        return transactionRepository.findAll();
     }
 
     @PostMapping("/buy")
     public Transaction makeTransaction(@Valid @RequestBody Transaction transaction)throws Exception{
+       return orderService.addTransactionAndUpdateOrder(transaction);
+    }
 
-        Product product = productRepository.findById(transaction.getProductId()).orElseThrow(() -> new Exception("Product does not exist in the database"));
-
-        double subTotal = product.getProductPrice()-product.getDiscount();
-        double vat = subTotal*product.getVat();
-        double total = subTotal+vat;
-
-        MakeOrder order = new MakeOrder();
-
-       if(transaction.getOrderId() != 0){
-           MakeOrder tempOrder = orderRepository.getById(transaction.getOrderId());
-           subTotal += tempOrder.getSubTotal();
-           vat += tempOrder.getVat();
-           total += tempOrder.getTotal();
-
-           order.setId(transaction.getOrderId());
-       }
-
-        order.setSubTotal(subTotal);
-        order.setVat(vat);
-        order.setTotal(total);
-
-
-           orderRepository.save(order);
-
-
-        return transactionRepository.save(transaction);
+    @PostMapping("/addAll")
+    public void addList(@RequestBody List<Transaction> transactions)throws  Exception{
+        for(Transaction transaction: transactions){
+            orderService.addTransactionAndUpdateOrder(transaction);
+        }
     }
 
     @Transactional
@@ -79,6 +72,8 @@ public class TransactionApi {
     public void deleteAll(){
         transactionRepository.deleteAll();
     }
+
+
 
 
 }

@@ -1,5 +1,6 @@
 package com.example.invoicecalculator;
 
+import com.example.invoicecalculator.api.TransactionApi;
 import com.example.invoicecalculator.entities.Invoice;
 import com.example.invoicecalculator.entities.Product;
 import com.example.invoicecalculator.services.InvoiceService;
@@ -17,6 +18,8 @@ public class InvoiceServiceTest {
 
     @Autowired
     InvoiceService invoiceService;
+    @Autowired
+    TransactionApi transactionApi;
 
     //Ger all purchased products and their amount
     @Test
@@ -33,15 +36,21 @@ public class InvoiceServiceTest {
     public void invoiceSumTest(){
         System.out.println("\n");
         List<Invoice> invoices = invoiceService.getInvoices(1);
-        if(invoices.size() >= 1){
-            invoices.forEach(System.out::println);
-        }
+        invoices.forEach(System.out::println);
         System.out.println("\n");
     }
 
     @Test
     public void test23(){
         System.out.println("\n Dummy trans "+invoiceService.getDummyTransactions().size()+"\n");
+    }
+
+    @Test
+    void testGetInvoicesFromDb(){
+        List<Invoice> invoices = transactionApi.generateInvoices(1);
+        System.out.println("\n");
+        invoices.forEach(System.out::println);
+        System.out.println("\n");
     }
 
 

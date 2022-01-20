@@ -1,0 +1,404 @@
+{
+	"info": {
+		"_postman_id": "b487b48a-8e7b-4e75-86e9-3caa1b9ae7c7",
+		"name": "Invoice Generator",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "Add Product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productName\": \"Ice Cream\",\n    \"productPrice\": 20.0,\n    \"discount\": 0.0,\n    \"vat\": 0.18\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/product/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/product/get/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"get",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/product/getAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"getAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/product/delete/9",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"delete",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Multiple Products",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n    \"productName\": \"Milk\",\n    \"productPrice\": 125,\n    \"discount\": 0.0,\n    \"vat\": 0.18\n    },\n    {\n    \"productName\": \"Water\",\n    \"productPrice\": 125,\n    \"discount\": 0.0,\n    \"vat\": 0.18\n    },\n    {\n    \"productName\": \"Snickers\",\n    \"productPrice\": 125,\n    \"discount\": 0.0,\n    \"vat\": 0.18\n    },\n     {\n    \"productName\": \"Coke\",\n    \"productPrice\": 125,\n    \"discount\": 0.0,\n    \"vat\": 0.18\n    },\n    {\n    \"productName\": \"Tea\",\n    \"productPrice\": 125,\n    \"discount\": 0.0,\n    \"vat\": 0.18\n    },{\n    \"productName\": \"Light Bulb\",\n    \"productPrice\": 250,\n    \"discount\": 50,\n    \"vat\": 0.18\n    },\n    {\n    \"productName\": \"7 Days\",\n    \"productPrice\": 1,\n    \"discount\": 0,\n    \"vat\": 0.18\n    },\n    {\n    \"productName\": \"TV\",\n    \"productPrice\": 600,\n    \"discount\": 0.0,\n    \"vat\": 0.18\n    },\n    {\n    \"productName\": \"Boiler\",\n    \"productPrice\": 750,\n    \"discount\": 50.0,\n    \"vat\": 0.18\n    },\n    {\n    \"productName\": \"Pizza\",\n    \"productPrice\": 10,\n    \"discount\": 0.0,\n    \"vat\": 0.18\n    },\n     {\n    \"productName\": \"Meat\",\n    \"productPrice\": 10,\n    \"discount\": 0.0,\n    \"vat\": 0.18\n    },\n     {\n    \"productName\": \"Sauce\",\n    \"productPrice\": 10,\n    \"discount\": 0.0,\n    \"vat\": 0.18\n    },\n     {\n    \"productName\": \"Mushrooms\",\n    \"productPrice\": 10,\n    \"discount\": 0.0,\n    \"vat\": 0.18\n    },\n     {\n    \"productName\": \"Salt\",\n    \"productPrice\": 10,\n    \"discount\": 0.0,\n    \"vat\": 0.18\n    },\n         {\n    \"productName\": \"Oil\",\n    \"productPrice\": 2,\n    \"discount\": 0.0,\n    \"vat\": 0.18\n    },\n     {\n    \"productName\": \"Suggar\",\n    \"productPrice\": 2,\n    \"discount\": 0.0,\n    \"vat\": 0.18\n    },\n     {\n    \"productName\": \"Apples\",\n    \"productPrice\": 2,\n    \"discount\": 0.0,\n    \"vat\": 0.18\n    }\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/product/addAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"addAll"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transaction",
+			"item": [
+				{
+					"name": "Get Invoices",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/transaction/getInvoice/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transaction",
+								"getInvoice",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Transaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productId\": 7,\n    \"orderId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/transaction/buy",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transaction",
+								"buy"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Transaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/transaction/delete/113",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transaction",
+								"delete",
+								"113"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete All",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/transaction/deleteAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transaction",
+								"deleteAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Product 7, 111 times to Order 1",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n {\n        \"productId\": 1,\n        \"orderId\": 7\n},\n {\n        \"productId\": 1,\n        \"orderId\": 7\n},\n {\n        \"productId\": 1,\n        \"orderId\": 7\n},\n {\n        \"productId\": 1,\n        \"orderId\": 7\n}\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/transaction/addAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transaction",
+								"addAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transaction",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/transaction/get/343",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transaction",
+								"get",
+								"343"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Transactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/transaction/getAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transaction",
+								"getAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Multiple Random Products",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n {\n        \"productId\": 1,\n        \"orderId\": 1\n},\n {\n        \"productId\": 1,\n        \"orderId\": 1\n},\n {\n        \"productId\": 2,\n        \"orderId\": 1\n},\n {\n        \"productId\": 2,\n        \"orderId\": 1\n},\n {\n        \"productId\": 3,\n        \"orderId\": 1\n},\n {\n        \"productId\": 3,\n        \"orderId\": 1\n},\n {\n        \"productId\": 4,\n        \"orderId\": 1\n},\n {\n        \"productId\": 4,\n        \"orderId\": 1\n},\n {\n        \"productId\": 5,\n        \"orderId\": 1\n},\n {\n        \"productId\": 5,\n        \"orderId\": 1\n},\n {\n        \"productId\": 6,\n        \"orderId\": 1\n},\n {\n        \"productId\": 7,\n        \"orderId\": 1\n},\n {\n        \"productId\": 8,\n        \"orderId\": 1\n},\n {\n        \"productId\": 9,\n        \"orderId\": 1\n},\n {\n        \"productId\": 10,\n        \"orderId\": 1\n},\n {\n        \"productId\": 10,\n        \"orderId\": 1\n},\n {\n        \"productId\": 10,\n        \"orderId\": 1\n},\n {\n        \"productId\": 11,\n        \"orderId\": 1\n}, {\n        \"productId\": 11,\n        \"orderId\": 1\n}, {\n        \"productId\": 11,\n        \"orderId\": 1\n},\n {\n        \"productId\": 12,\n        \"orderId\": 1\n}, {\n        \"productId\": 12,\n        \"orderId\": 1\n}, {\n        \"productId\": 12,\n        \"orderId\": 1\n},\n {\n        \"productId\": 13,\n        \"orderId\": 1\n},\n {\n        \"productId\": 13,\n        \"orderId\": 1\n},\n {\n        \"productId\": 13,\n        \"orderId\": 1\n},\n {\n        \"productId\": 14,\n        \"orderId\": 1\n},\n {\n        \"productId\": 14,\n        \"orderId\": 1\n},\n {\n        \"productId\": 15,\n        \"orderId\": 1\n},\n {\n        \"productId\": 15,\n        \"orderId\": 1\n},\n {\n        \"productId\": 15,\n        \"orderId\": 1\n},\n {\n        \"productId\": 15,\n        \"orderId\": 1\n},\n {\n        \"productId\": 15,\n        \"orderId\": 1\n},\n {\n        \"productId\": 15,\n        \"orderId\": 1\n},\n {\n        \"productId\": 16,\n        \"orderId\": 1\n},\n {\n        \"productId\": 16,\n        \"orderId\": 1\n},\n {\n        \"productId\": 16,\n        \"orderId\": 1\n},\n {\n        \"productId\": 16,\n        \"orderId\": 1\n}\n\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/transaction/addAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transaction",
+								"addAll"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\n        \"subTotal\": 0.0,\n        \"vat\": 0.0,\n        \"total\": 0.0\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/order/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"order",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/order/delete/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"order",
+								"delete",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/order/getAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"order",
+								"getAll"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
