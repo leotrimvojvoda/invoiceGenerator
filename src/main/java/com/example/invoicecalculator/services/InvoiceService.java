@@ -51,9 +51,9 @@ public class InvoiceService {
 
         Product p1 = new Product(1,"Milk",125,0,0.18);
         Product p2 = new Product(2,"Water",125,0,0.18);
-        Product p3 = new Product(3,"Snickers",250,0,0.18);
-        Product p4 = new Product(4,"Coke",250,0,0.18);
-        Product p5 = new Product(5,"Tea",250,0,0.18);
+        Product p3 = new Product(3,"Snickers",125,0,0.18);
+        Product p4 = new Product(4,"Coke",125,0,0.18);
+        Product p5 = new Product(5,"Tea",125,0,0.18);
         Product p6 = new Product(6,"Light Bulb",250,0,0.18);
         Product p7 = new Product(7,"TV",600,0,0);
         Product p8 = new Product(8,"Boiler",750,0.25,0.18);
@@ -98,7 +98,7 @@ public class InvoiceService {
 
     public List<Invoice> getInvoices(int orderId){
 
-        transactions = getDummyTransactions();//getTransactions(orderId); //
+        transactions = getTransactions(orderId); //getDummyTransactions();//
 
         Product product = new Product();
         int amount = 0;
@@ -156,8 +156,6 @@ public class InvoiceService {
                 while (!fifties.isEmpty()) addFiftyToInvoice();
             }
         }
-
-        if(!fifties.isEmpty()) System.out.println("THERE ARE STILL SOME ITEMS IN THE FIFTIES LIST");
 
         return invoices;
     }

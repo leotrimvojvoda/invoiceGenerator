@@ -6,7 +6,8 @@
 * Add products with PRICE + VAT > 500 in one invoice
 * Add products to one invoice until it reaches the threshold below 500
 * Add 50 packs to separate invoices without repeating
-* Leftover amount of products is added in invoice => 75 products, 50 is added to the fifties collection and 25 is added to an invoice 
+* Leftover amount of products is added in invoice => 75 products, 50 is added to the fifties collection and 25 is added to an invoice
+* Created API endpoints to CRUD Products
 
 # TODO
-* Create API endpoints to CRUD Products, Transactions and Orders
+* Transactions from the database are returned only for the first order no matter what order id we specify.

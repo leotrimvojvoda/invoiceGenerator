@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Integer> {
 /*
@@ -37,6 +38,11 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
     @Query(value = "SELECT COUNT(product_id) FROM transaction t where t.product_id = ?1 AND t.order_id = ?2",
     nativeQuery = true)
     int getNumberOfPurchasedProductsInOneOrder(int product_id, int order_id);
+
+
+    //Optional<Transaction> deleteTransactionById(int id);
+
+    //void deleteAllByOrderId(int orderId);
 
 
 

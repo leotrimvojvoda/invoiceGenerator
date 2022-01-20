@@ -2,12 +2,12 @@ package com.example.invoicecalculator;
 
 import com.example.invoicecalculator.api.TransactionApi;
 import com.example.invoicecalculator.data.TransactionRepository;
-import com.example.invoicecalculator.entities.MakeOrder;
-import com.example.invoicecalculator.entities.Product;
 import com.example.invoicecalculator.entities.Transaction;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import javax.transaction.Transactional;
 
 @SpringBootTest
 class InvoiceCalculatorApplicationTests {
@@ -63,5 +63,12 @@ class InvoiceCalculatorApplicationTests {
 		transactionApi.makeTransaction(transaction);
 
 	}
+
+	@Test
+	void deleteTransaction()throws Exception{
+		transactionApi.delete(112);
+	}
+
+
 
 }

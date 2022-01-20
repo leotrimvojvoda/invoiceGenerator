@@ -20,6 +20,7 @@ public class OrderApi {
         this.orderRepository = orderRepository;
     }
 
+    /*MAYBE REQUESTBODY SHOULD BE REMOVED */
     @PostMapping("/add")
     public MakeOrder addOrder(@RequestBody @Valid MakeOrder order){
         return  orderRepository.save(order);
